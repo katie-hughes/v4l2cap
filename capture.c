@@ -40,13 +40,19 @@ int main(void)
 
     printf("\nGetting Video Formats\n");
 
-    struct v4l2_format fmt = {.type = V4L2_BUF_TYPE_VIDEO_CAPTURE};
-    if(-1 == ioctl(fd, VIDIOC_G_FMT, &fmt))
+    struct v4l2_format format = {.type = V4L2_BUF_TYPE_VIDEO_CAPTURE};
+    if(-1 == ioctl(fd, VIDIOC_G_FMT, &format))
     {
         perror("Error Querying Formats.");
         exit(EXIT_FAILURE);
     }
 
-
+    printf("\tWidth: %d Height %d\n", format.fmt.pix.width, format.fmt.pix.height);
+    char pixelformat[5]="";
+    pixelformat[3] = format.fmt.pix.pixelformat >> 24;
+    pixelformat[2] = (format.fmt.pix.pixelformat & 0x00FF0000) >> 16;
+    pixelformat[1] = (format.fmt.pix.pixelformat & 0x0000FF00) >> 8;
+    pixelformat[0] = format.fmt.pix.pixelformat & 0x000000FF;
+    printf("\t:Pixel Format: %s\n", pixelformat);
     return 0;
 }
