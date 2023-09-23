@@ -60,7 +60,7 @@ int main(void)
     pixelformat[2] = (format.fmt.pix.pixelformat & 0x00FF0000) >> 16;
     pixelformat[1] = (format.fmt.pix.pixelformat & 0x0000FF00) >> 8;
     pixelformat[0] = format.fmt.pix.pixelformat & 0x000000FF;
-    printf("\tPixel Format: %s\n", pixelformat);
+    printf("\tPixel Format: 0x%x (%s)\n", format.fmt.pix.pixelformat, pixelformat);
 
     // Rather than setting a format we will use the one the camera is currently set to
 
@@ -180,5 +180,15 @@ int main(void)
         exit(EXIT_FAILURE);
     }
     printf("Frame capture complete.\n");
+
+    printf("To view the frame (which is a single still image convert it to an image file using ffmpeg.\n");
+    printf("The exact commands depend on the color space and resolution (both of which are printed by this program");
+    printf("The command is: ffmpeg -f rawvideo -pix_fmt <format> -s:v <width>x<height> -i video-XXXXXX output.mp4\n");
+    printf("To view the movie (which is one frame long): ffplay output.mp4\n");
+    printf("ffplay seems to repeat the movie by default\n");
+    printf("<width> and <height> need to be the actual width and heigh tof the image\n");
+    printf("<format> is the pixel format.  For a YUYV camera, use yuyv422.\n");
+    printf("<format> can be mjpeg for MJPG.\n");
+    printf("Theoretically, the frame from MJPG is already a JPG image, so you can see it in any JPG viewer without conversion.\n");
     return 0;
 }
