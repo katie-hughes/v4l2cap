@@ -10,4 +10,4 @@ capture: capture.o
 .PHONY: clean
 
 clean:
-	rm -f capture.o
+	rm -f capture.o capture
