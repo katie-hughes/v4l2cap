@@ -22,7 +22,7 @@ int main(void)
 
     // https://docs.kernel.org/userspace-api/media/v4l/vidioc-querycap.html#vidioc-querycap
     struct v4l2_capability caps = {0};
-    if(EINVAL == ioctl(fd, VIDIOC_QUERYCAP, &caps))
+    if(-1 == ioctl(fd, VIDIOC_QUERYCAP, &caps))
     {
         perror("Error Querying Capabilities");
         exit(EXIT_FAILURE);
@@ -39,7 +39,7 @@ int main(void)
            caps.capabilities & V4L2_CAP_VIDEO_CAPTURE);
 
     printf("\nGetting Video Formats\n");
-
+    // https://docs.kernel.org/userspace-api/media/v4l/vidioc-g-fmt.html#vidioc-g-fmt
     struct v4l2_format format = {.type = V4L2_BUF_TYPE_VIDEO_CAPTURE};
     if(-1 == ioctl(fd, VIDIOC_G_FMT, &format))
     {
@@ -53,6 +53,27 @@ int main(void)
     pixelformat[2] = (format.fmt.pix.pixelformat & 0x00FF0000) >> 16;
     pixelformat[1] = (format.fmt.pix.pixelformat & 0x0000FF00) >> 8;
     pixelformat[0] = format.fmt.pix.pixelformat & 0x000000FF;
-    printf("\t:Pixel Format: %s\n", pixelformat);
+    printf("\tPixel Format: %s\n", pixelformat);
+
+    // Rather than setting a format we will use the one the camera is currently set to
+
+    // The next step is to request that the device allocate a buffer for streaming
+    printf("\nRequesting Buffer for MMAP Streaming\n");
+    // There are other streaming methods to try but
+    // mmap streaming seems to be the most common
+    // https://docs.kernel.org/userspace-api/media/v4l/vidioc-reqbufs.html#vidioc-reqbufs
+    struct v4l2_requestbuffers req =
+        {
+            .count = 1,
+            .type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
+            .memory = V4L2_MEMORY_MMAP,
+        };
+    if(-1 == ioctl(fd, VIDIOC_REQBUFS, &req))
+    {
+        perror("Error Requesting Buffers.");
+        exit(EXIT_FAILURE);
+    }
+    
+
     return 0;
 }
