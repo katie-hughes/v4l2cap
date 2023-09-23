@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 #include <linux/videodev2.h>
 
 #define VIDEO_DEVICE "/dev/video0"
@@ -62,18 +63,54 @@ int main(void)
     // There are other streaming methods to try but
     // mmap streaming seems to be the most common
     // https://docs.kernel.org/userspace-api/media/v4l/vidioc-reqbufs.html#vidioc-reqbufs
-    struct v4l2_requestbuffers req =
+    struct v4l2_requestbuffers req_buf =
         {
             .count = 1,
             .type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
             .memory = V4L2_MEMORY_MMAP,
         };
-    if(-1 == ioctl(fd, VIDIOC_REQBUFS, &req))
+    if(-1 == ioctl(fd, VIDIOC_REQBUFS, &req_buf))
     {
         perror("Error Requesting Buffers.");
         exit(EXIT_FAILURE);
     }
-    
+
+    // map the buffer into memory so this process can access it
+    struct v4l2_buffer buf_info =
+        {
+            .type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
+            .memory = V4L2_MEMORY_MMAP,
+            .index = 0
+        };
+    if(-1 == ioctl(fd, VIDIOC_QUERYBUF, & buf_info))
+    {
+        perror("Error Querying Buffer");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Allocated the memory-mapped buffer\n");
+    u_int8_t * buffer = NULL;
+    buffer = (u_int8_t*)mmap(NULL,
+                             buf_info.length,
+                             PROT_READ | PROT_WRITE,
+                             MAP_SHARED,
+                             fd,
+                             buf_info.m.offset);
+
+    if(MAP_FAILED == buffer)
+    {
+        perror("Error mapping memory");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Beginning the stream\n");
+    unsigned int stream_type = req_buf.type;
+    if(-1 == ioctl(fd, VIDIOC_STREAMON, &stream_type))
+    {
+        perror("Could not begin stream.");
+        exit(EXIT_FAILURE);
+    }
+
 
     return 0;
 }
