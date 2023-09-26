@@ -55,12 +55,81 @@ int main(void)
     }
 
     printf("\tWidth: %d Height %d\n", format.fmt.pix.width, format.fmt.pix.height);
+
+    printf("Meta Info\n");
+    printf("\tBuffer size: %d\n", format.fmt.meta.buffersize);
+    printf("\tData format: %d\n", format.fmt.meta.dataformat);
+
+    printf("Pixel Info\n");
+    printf("\tBytesPerLine %d\n", format.fmt.pix.bytesperline);
+    printf("\tColor Space  %d\n", format.fmt.pix.colorspace);
+    printf("\tField %d\n", format.fmt.pix.field);
+    printf("\tFlags %d\n", format.fmt.pix.flags);
+    printf("\tPix Height %d Width %d\n", format.fmt.pix.height, format.fmt.pix.width);
+    printf("\tHSV Enc %d\n", format.fmt.pix.hsv_enc);
+    printf("\tPixelformat %d\n", format.fmt.pix.pixelformat);
+    printf("\tPriv %d\n", format.fmt.pix.priv);
+    printf("\tQuantization %d\n", format.fmt.pix.quantization);
+    printf("\tSizeImage %d\n", format.fmt.pix.sizeimage);
+    printf("\tXfer_func %d\n", format.fmt.pix.xfer_func);
+    printf("\tycbcr_enc %d\n", format.fmt.pix.ycbcr_enc);
+
+    printf("Pix mp Info\n");
+    printf("\tColor Space  %d\n", format.fmt.pix_mp.colorspace);
+    printf("\tField %d\n", format.fmt.pix_mp.field);
+    printf("\tFlags %d\n", format.fmt.pix_mp.flags);
+    printf("\tPix Height %d Width %d\n", format.fmt.pix_mp.height, format.fmt.pix_mp.width);
+    printf("\tHSV Enc %d\n", format.fmt.pix_mp.hsv_enc);
+    printf("\tPixelformat %d\n", format.fmt.pix_mp.pixelformat);
+    printf("\tPlane_fmt bpl %d\n", format.fmt.pix_mp.plane_fmt->bytesperline);
+    // printf("\tPlane_fmt res %d\n", format.fmt.pix_mp.plane_fmt->reserved);
+    printf("\tPlane_fmt sizeimage %d\n", format.fmt.pix_mp.plane_fmt->sizeimage);
+    printf("\tQuantization %d\n", format.fmt.pix_mp.quantization);
+    // printf("\tReserved %d\n", format.fmt.pix_mp.reserved);
+    printf("\tXfer_func %d\n", format.fmt.pix_mp.xfer_func);
+    printf("\tycbcr_enc %d\n", format.fmt.pix_mp.ycbcr_enc);
+    printf("\tNum Planes %d\n", format.fmt.pix_mp.num_planes);
+
+    printf("Raw Data\n");
+    printf("%s\n", format.fmt.raw_data);
+
+    printf("SDR\n");
+    printf("\tBuffer Size: %d\n", format.fmt.sdr.buffersize);
+    printf("\tPix Format: %d\n", format.fmt.sdr.pixelformat);
+    // printf("\tReserved: %d\n", format.fmt.sdr.reserved);
+
+    printf("Sliced\n");
+    printf("\tIO size %d\n", format.fmt.sliced.io_size);
+    printf("\tService lines %d\n", format.fmt.sliced.service_lines);
+    printf("\tService set %d\n", format.fmt.sliced.service_set);
+
+    printf("VBI\n");
+    printf("\tCount: %ls\n", format.fmt.vbi.count);
+    printf("\tFlags: %d\n", format.fmt.vbi.flags);
+    printf("\tOffset: %d\n", format.fmt.vbi.offset);
+    printf("\tSample fmt: %d\n", format.fmt.vbi.sample_format);
+    printf("\tsamples per line: %d\n", format.fmt.vbi.samples_per_line);
+    printf("\tsample rate: %d\n", format.fmt.vbi.sampling_rate);
+    printf("\tStart: %ls\n", format.fmt.vbi.start);
+
+    printf("Win\n");
+    printf("\tchromakey %d\n", format.fmt.win.chromakey);
+    printf("\tclipcount %d\n", format.fmt.win.clipcount);
+    // printf("\tclips c %d\n", format.fmt.win.clips->c);
+    printf("\tfield %d\n", format.fmt.win.field);
+    printf("\tglobal alpha %d\n", format.fmt.win.global_alpha);
+    printf("\tw height %d\n", format.fmt.win.w.height);
+    printf("\tw width %d\n", format.fmt.win.w.width);
+    printf("\tw top %d\n", format.fmt.win.w.top);
+    printf("\tw left %d\n", format.fmt.win.w.left);
+
+
     char pixelformat[5]="";
     pixelformat[3] = format.fmt.pix.pixelformat >> 24;
     pixelformat[2] = (format.fmt.pix.pixelformat & 0x00FF0000) >> 16;
     pixelformat[1] = (format.fmt.pix.pixelformat & 0x0000FF00) >> 8;
     pixelformat[0] = format.fmt.pix.pixelformat & 0x000000FF;
-    printf("\tPixel Format: 0x%x (%s)\n", format.fmt.pix.pixelformat, pixelformat);
+    printf("\n\tPixel Format: 0x%x (%s)\n", format.fmt.pix.pixelformat, pixelformat);
 
     // Rather than setting a format we will use the one the camera is currently set to
 
